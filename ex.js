@@ -14,7 +14,7 @@ async function fetchJson(url){
 const getChefBirthday = async (id)=>{
     let birthday
     const userId = await fetchJson(`https://dummyjson.com/recipes/${id}`).then(data=>data.userId);
-    const chef = await fetchJson(`https://dummyjson.com/users/${userId}`)
+    await fetchJson(`https://dummyjson.com/users/${userId}`)
     .then(response => birthday = response.birthDate)
     return birthday
 }

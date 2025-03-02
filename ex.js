@@ -12,11 +12,41 @@ async function fetchJson(url){
 }
 
 const getChefBirthday = async (id)=>{
-    let birthday
-    const userId = await fetchJson(`https://dummyjson.com/recipes/${id}`).then(data=>data.userId);
-    await fetchJson(`https://dummyjson.com/users/${userId}`)
-    .then(response => birthday = response.birthDate)
-    return birthday
+
+
+    let userId;
+    try{
+         userId = await fetchJson(`https://dummyjson.com/recipes/${id}`)
+        .then(data=>data.userId)
+    }catch(error){
+       throw new Error("Non è possibile recuperare l'id dell'utente")
+    }
+
+    if(userId.message){throw new Error(`utente con id ${id} non trovato`)}
+
+    let chef 
+    try{await fetchJson(`https://dummyjson.com/users/${userId}`)
+    .then(response => chef = response.birthDate)
+    }catch{
+        throw new Error("Non è stato trovato un utente con questo id")
+    }
+
+    return chef
 }
 
-getChefBirthday(2).then(birthday=>(console.log("La data di nascita dello chef è:", birthday))).catch(error=>console.error(error))
+// IIFE
+(async()=>{
+    try{
+        const birthday = await getChefBirthday(32423523523)
+        console.log("La data di nascita dello chef è:", birthday)
+    }catch(error){
+       console.log(error)
+    }
+})()
+
+
+// PRIMA VERSIONE 
+// getChefBirthday(2)
+// .then(birthday=>(console.log("La data di nascita dello chef è:", birthday)))
+// .catch(error=>console.error(error))
+// .finally(console.log("Fine del codice"))

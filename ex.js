@@ -21,8 +21,7 @@ const getChefBirthday = async (id)=>{
     }catch(error){
        throw new Error("Non è possibile recuperare l'id dell'utente")
     }
-
-    if(userId.message){throw new Error(`utente con id ${id} non trovato`)}
+    if(userId.message){throw new Error(response.message)}
 
     let chef 
     try{await fetchJson(`https://dummyjson.com/users/${userId}`)
@@ -30,6 +29,7 @@ const getChefBirthday = async (id)=>{
     }catch{
         throw new Error("Non è stato trovato un utente con questo id")
     }
+    if(response.message){throw new Error(response.message)}
 
     return chef
 }
@@ -37,7 +37,7 @@ const getChefBirthday = async (id)=>{
 // IIFE
 (async()=>{
     try{
-        const birthday = await getChefBirthday(32423523523)
+        const birthday = await getChefBirthday(2)
         console.log("La data di nascita dello chef è:", birthday)
     }catch(error){
        console.log(error)
